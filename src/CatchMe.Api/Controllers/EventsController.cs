@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CatchMe.Infrastructure.Services;
 using CatchMe.Infrastructure.Commands;
+using Microsoft.AspNetCore.Authorization;
+using CatchMe.Infrastructure.Commands.Events;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CatchMe.Api.Controllers
 {
 	[Route("[controller]")]
-	public class EventsController : ApiControllerBase
+	public class EventsController : Controller
 	{
 		private readonly IEventService _eventService;
 
@@ -46,7 +48,7 @@ namespace CatchMe.Api.Controllers
 		{
 			cmd.EventId = Guid.NewGuid();
 			await _eventService.CreateAsync(cmd.EventId, cmd.Name, cmd.Descirption, cmd.StartDate, cmd.EndDate);
-			await _eventService.AddSeatAsync(cmd.EventId, cmd.Seats);
+			await _eventService.AddSeatAsync(cmd.EventId, cmd.Seats, cmd.Price);
 			return Created($"/events/{cmd.EventId}", null);
 		}
 

@@ -2,6 +2,7 @@
 using CatchMe.Core.Domain;
 using CatchMe.Core.Repository;
 using CatchMe.Infrastructure.DTO;
+using CatchMe.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,14 +78,14 @@ namespace CatchMe.Infrastructure.Services
 		}
 		public async Task UpdateAsync(Guid id, string name, string description)
 		{
-
-			var @event = await _eventRepository.GetAsync(name);
+			var @event = await _eventRepository.GetOrFailAsync(id);
+			@event = await _eventRepository.GetAsync(name);
 			if (@event != null)
 			{
 				throw new Exception($"Event: '{name}' already exist.");
 
 			}
-			@event = await _eventRepository.GetOrFailAsync(id);
+			
 			@event.SetName(name);
 			@event.SetDescription(description);
 			await _eventRepository.UpdateAsync(@event);

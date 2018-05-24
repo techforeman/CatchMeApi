@@ -13,16 +13,18 @@ namespace CatchMe.Core.Domain
 		public string UserName { get; protected set; }
 		public DateTime? OrderedAt { get; protected set; }
 		public bool Ordered => UserId.HasValue;
+		public decimal Price { get; protected set; }
 
 		protected Seat()
 		{
 
 		}
 
-		public Seat(Event @event, int seating)
+		public Seat(Event @event, int seating, decimal price)
 		{
 			EventId = @event.Id;
 			Seating = seating;
+			Price = price;
 
 		}
 

@@ -13,6 +13,7 @@ namespace CatchMe.Infrastructure.Commands
 		public DateTime EndDate { get; set; }
 		public DateTime StartDate { get; set; }
 		public int Seats { get; set; }
+		public decimal Price { get; set; }
 
 
 

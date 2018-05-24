@@ -14,9 +14,7 @@ namespace CatchMe.Core.Domain
 		public DateTime EndDate { get; protected set; }
 		public DateTime StartDate { get; protected set; }
 		public DateTime UpdateAt { get; protected set; }
-
 		public IEnumerable<Seat> Seats => _seats;
-
 		public IEnumerable<Seat> OrderedSets => Seats.Where(x => x.Ordered);
 		public IEnumerable<Seat> AvailabledSets => Seats.Except(OrderedSets);
 
@@ -64,13 +62,13 @@ namespace CatchMe.Core.Domain
 		}
 
 
-		public void AddSeats(int amount)
+		public void AddSeats(int amount, decimal price)
 		{
 			var seating = _seats.Count + 1;
 			for (var i = 0; i < amount; i++)
 			{
 
-				_seats.Add(new Seat(this, seating + 1));
+				_seats.Add(new Seat(this, seating + 1, price));
 				seating++;
 			}
 		}
