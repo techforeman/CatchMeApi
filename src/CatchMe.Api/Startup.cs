@@ -12,6 +12,9 @@ using CatchMe.Infrastructure.Repository;
 using CatchMe.Infrastructure.Services;
 using CatchMe.Infrastructure.Mapper;
 using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using CatchMe.Infrastructure.Settings;
 
 namespace CatchMe.Api
 {
@@ -48,20 +51,30 @@ namespace CatchMe.Api
 			services.AddScoped<IUserRepository, UserRepository>();
 			services.AddScoped<IEventService, EventService>();
 			//services.AddScoped<ISeatService, SeatService>();
-			//services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IUserService, UserService>();
 			services.AddSingleton(AutoMapperConfig.Initialize());
+			services.Configure<JwtSettings>(Configuration.GetSection("jwt"));
 		}
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+		{
+			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+			loggerFactory.AddDebug();
 
-            app.UseApplicationInsightsRequestTelemetry();
-
-            app.UseApplicationInsightsExceptionTelemetry();
-
+			app.UseApplicationInsightsRequestTelemetry();
+			var jwtSettings = app.ApplicationServices.GetService<JwtSettings>();
+			app.UseApplicationInsightsExceptionTelemetry();
+			app.UseJwtBearerAuthentication(new JwtBearerOptions
+				{ 
+					AutomaticAuthenticate =true,
+					TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidIssuer = jwtSettings.Issuer,
+						ValidateAudience = false,
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+					}
+				});
             app.UseMvc();
 
 
