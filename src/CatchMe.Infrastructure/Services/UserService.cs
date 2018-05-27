@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CatchMe.Core.Domain;
 using CatchMe.Core.Repository;
+using CatchMe.Infrastructure.DTO;
 using CatchMe.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;

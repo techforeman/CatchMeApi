@@ -16,7 +16,7 @@ namespace CatchMe.Infrastructure.Mapper
 				cfg.CreateMap<Event, EventDTO>()
 				.ForMember(x => x.SeatsCount, m => m.MapFrom(p => p.Seats.Count()));
 				cfg.CreateMap<Event, EventDetailsDTO>();
-				//cfg.CreateMap<User, AccountDTO>();
+				cfg.CreateMap<User, AccountDTO>();
 				cfg.CreateMap<Seat, SeatDTO>();
 			})
 			.CreateMapper();

@@ -11,7 +11,7 @@ using CatchMe.Infrastructure.Commands.Users;
 
 namespace CatchMe.Api.Controllers
 {
-	public class AccountController : Controller
+	public class AccountController : ApiControllerBase
 	{
 		private readonly IUserService _userService;
 

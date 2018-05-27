@@ -53,6 +53,7 @@ namespace CatchMe.Api
 			//services.AddScoped<ISeatService, SeatService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddSingleton(AutoMapperConfig.Initialize());
+			services.AddSingleton<IJwtHandler, JwtHandler>();
 			services.Configure<JwtSettings>(Configuration.GetSection("jwt"));
 		}
 
