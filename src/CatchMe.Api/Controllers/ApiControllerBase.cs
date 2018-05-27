@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CatchMe.Api.Controllers
 {
-    [Route("controlle]")]
-    public class ApiControllerBase : Controller
+
+	[Route("[controller]")]
+	public class ApiControllerBase : Controller
     {
 		protected Guid UserId => User?.Identity?.IsAuthenticated == true ?
 			 Guid.Parse(User.Identity.Name) :

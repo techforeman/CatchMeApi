@@ -13,7 +13,7 @@ using CatchMe.Infrastructure.Commands.Events;
 namespace CatchMe.Api.Controllers
 {
 	[Route("[controller]")]
-	public class EventsController : ApiControllerBase
+	public class EventsController : Controller
 	{
 		private readonly IEventService _eventService;
 

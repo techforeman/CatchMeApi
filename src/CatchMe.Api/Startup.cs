@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CatchMe.Infrastructure.Settings;
+using Microsoft.Extensions.Options;
 
 namespace CatchMe.Api
 {
@@ -44,7 +45,7 @@ namespace CatchMe.Api
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
-
+			services.AddAuthorization(x=>x.AddPolicy("HasAdminRole", p => p.RequireRole("admin")));
 			services.AddMvc()
 				.AddJsonOptions(x => x.SerializerSettings.Formatting = Formatting.Indented);
 			services.AddScoped<IEventRepository, EventRepository>();
@@ -63,20 +64,22 @@ namespace CatchMe.Api
 			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 			loggerFactory.AddDebug();
 
-			app.UseApplicationInsightsRequestTelemetry();
-			var jwtSettings = app.ApplicationServices.GetService<JwtSettings>();
-			app.UseApplicationInsightsExceptionTelemetry();
+			
+			var jwtSettings = app.ApplicationServices.GetService<IOptions<JwtSettings>>();
+			
 			app.UseJwtBearerAuthentication(new JwtBearerOptions
 				{ 
 					AutomaticAuthenticate =true,
 					TokenValidationParameters = new TokenValidationParameters
 					{
-						ValidIssuer = jwtSettings.Issuer,
+						ValidIssuer = jwtSettings.Value.Issuer,
 						ValidateAudience = false,
-						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Value.Key))
 					}
 				});
-            app.UseMvc();
+			app.UseApplicationInsightsRequestTelemetry();
+			app.UseApplicationInsightsExceptionTelemetry();
+			app.UseMvc();
 
 
         }
