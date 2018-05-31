@@ -50,5 +50,14 @@ namespace CatchMe.Infrastructure.Services
 			@event.CancelOrderedSeats(user, amount);
 			await _eventRepository.UpdateAsync(@event);
 		}
+
+		public async Task<IEnumerable<SeatDTO>> GetForUserAsync(Guid userId)
+		{
+			var user = await _userRepository.GetOrFailAsync(userId);
+			var events = await _eventRepository.BrowseAsync();
+			var seats = events.SelectMany(x => x.GetSeatsOrderedByUser(user));
+
+			return _mapper.Map<IEnumerable<SeatDTO>>(seats);
+		}
 	}
 }

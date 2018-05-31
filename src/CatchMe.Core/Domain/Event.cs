@@ -68,7 +68,7 @@ namespace CatchMe.Core.Domain
 			for (var i = 0; i < amount; i++)
 			{
 
-				_seats.Add(new Seat(this, seating + 1, price));
+				_seats.Add(new Seat(this, seating, price));
 				seating++;
 			}
 		}
@@ -90,16 +90,19 @@ namespace CatchMe.Core.Domain
 		public void CancelOrderedSeats(User user, int amount)
 		{
 
-			var seats = OrderedSets.Where(x => x.UserId == user.Id);
+			var seats = GetSeatsOrderedByUser(user);
 			if (seats.Count() < amount)
 			{
 				throw new Exception($"Not enought ordered seats to be canceled.");
 			}
 
-			foreach (var seat in seats)
+			foreach (var seat in seats.Take(amount))
 			{
 				seat.Cancel();
 			}
 		}
+
+		public IEnumerable<Seat> GetSeatsOrderedByUser(User user)
+		=> OrderedSets.Where(x => x.UserId == user.Id);
 	}
 }

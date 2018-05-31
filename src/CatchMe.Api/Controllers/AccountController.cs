@@ -14,10 +14,12 @@ namespace CatchMe.Api.Controllers
 	public class AccountController : ApiControllerBase
 	{
 		private readonly IUserService _userService;
+		private readonly ISeatService _seatsService;
 
-		public AccountController(IUserService userService)
+		public AccountController(IUserService userService, ISeatService seatsService)
 		{
 			_userService = userService;
+			_seatsService = seatsService;
 		}
 
 
@@ -27,10 +29,8 @@ namespace CatchMe.Api.Controllers
 		=> Json(await _userService.GetAccountAsync(UserId));
 
 		[HttpGet("seats")]
-		public Task<IActionResult> GetSeats()
-		{
-			throw new NotImplementedException();
-		}
+		public async Task<IActionResult> GetSeats()
+		=> Json(await _seatsService.GetForUserAsync(UserId));
 
 		[HttpPost("register")]
 		public async Task<IActionResult> Post([FromBody]Register cmd)

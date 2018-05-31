@@ -12,5 +12,7 @@ namespace CatchMe.Infrastructure.Services
 
 		Task OrderAsync(Guid userId, Guid eventId, int amount);
 		Task CanceleAsync(Guid userId, Guid eventId, int amount);
+
+		Task<IEnumerable<SeatDTO>> GetForUserAsync(Guid userId);
 	}
 }

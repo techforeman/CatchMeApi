@@ -15,5 +15,7 @@ namespace CatchMe.Infrastructure.DTO
 		public DateTime StartDate { get; set; }
 		public DateTime UpdateAt { get; set; }
 		public int SeatsCount { get; set; }
+		public int OrderedSeatsCount { get; set; }
+		public int AvailableSeatsCount { get; set; }
 	}
 }
