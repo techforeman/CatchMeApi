@@ -51,7 +51,7 @@ namespace CatchMe.Api
 			services.AddScoped<IEventRepository, EventRepository>();
 			services.AddScoped<IUserRepository, UserRepository>();
 			services.AddScoped<IEventService, EventService>();
-			//services.AddScoped<ISeatService, SeatService>();
+			services.AddScoped<ISeatService, SeatService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddSingleton(AutoMapperConfig.Initialize());
 			services.AddSingleton<IJwtHandler, JwtHandler>();
