@@ -3,6 +3,8 @@ using CatchMe.Core.Domain;
 using CatchMe.Core.Repository;
 using CatchMe.Infrastructure.DTO;
 using CatchMe.Infrastructure.Extensions;
+using Microsoft.Extensions.Logging;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,7 @@ namespace CatchMe.Infrastructure.Services
 	{
 		private readonly IEventRepository _eventRepository;
 		private readonly IMapper _mapper;
+		private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
 		public EventService(IEventRepository eventRepository, IMapper mapper)
 		{
@@ -35,6 +38,7 @@ namespace CatchMe.Infrastructure.Services
 
 		public async Task<IEnumerable<EventDTO>> BrowseAsync(string name = null)
 		{
+			Logger.Info("Fetching events");
 			var events = await _eventRepository.BrowseAsync(name);
 			return _mapper.Map<IEnumerable<EventDTO>>(events);
 		}

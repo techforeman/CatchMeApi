@@ -36,11 +36,21 @@ namespace CatchMe.Core.Domain
 			SetName(name);
 			SetDescription(description);
 			Descirption = description;
-			StartDate = DateTime.UtcNow;
-			EndDate = endDate;
+			SetDate(startDate, endDate);
 			CreateAt = DateTime.UtcNow;
 			UpdateAt = DateTime.UtcNow;
 		}
+
+		public void SetDate(DateTime startDate, DateTime endDate)
+		{
+			if(startDate>=endDate)
+			{
+				throw new Exception($"End ate must be greater than start date.");
+			}
+			StartDate = startDate;
+			EndDate = endDate;
+		}
+
 		public void SetName(string name)
 		{
 			if (string.IsNullOrWhiteSpace(name))

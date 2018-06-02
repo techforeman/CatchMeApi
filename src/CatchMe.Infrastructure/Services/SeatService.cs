@@ -51,13 +51,27 @@ namespace CatchMe.Infrastructure.Services
 			await _eventRepository.UpdateAsync(@event);
 		}
 
-		public async Task<IEnumerable<SeatDTO>> GetForUserAsync(Guid userId)
+		public async Task<IEnumerable<SeatDetailsDTO>> GetForUserAsync(Guid userId)
 		{
 			var user = await _userRepository.GetOrFailAsync(userId);
 			var events = await _eventRepository.BrowseAsync();
-			var seats = events.SelectMany(x => x.GetSeatsOrderedByUser(user));
+			
 
-			return _mapper.Map<IEnumerable<SeatDTO>>(seats);
+			var allSeats = new List<SeatDetailsDTO>();
+			foreach (var @event in events)
+			{
+				var seats = _mapper.Map<IEnumerable<SeatDetailsDTO>>(@event.GetSeatsOrderedByUser(user))
+					.ToList();
+				seats.ForEach(x=>
+				{
+					x.EventId = @event.Id;
+					x.EventName = @event.Name;
+				});
+				allSeats.AddRange(seats);
+			}
+			return allSeats;
+
+			
 		}
 	}
 }

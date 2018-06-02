@@ -16,6 +16,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CatchMe.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace CatchMe.Api
 {
@@ -61,8 +63,12 @@ namespace CatchMe.Api
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
-			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-			loggerFactory.AddDebug();
+			//loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+			//loggerFactory.AddDebug();
+			loggerFactory.AddNLog();
+			app.AddNLogWeb();
+			env.ConfigureNLog("nlog.config");
+
 
 			
 			var jwtSettings = app.ApplicationServices.GetService<IOptions<JwtSettings>>();
