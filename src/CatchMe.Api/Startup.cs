@@ -20,6 +20,7 @@ using NLog.Extensions.Logging;
 using NLog.Web;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using CatchMe.Api.Framework;
 
 namespace CatchMe.Api
 {
@@ -104,6 +105,7 @@ namespace CatchMe.Api
 			app.UseApplicationInsightsRequestTelemetry();
 			app.UseApplicationInsightsExceptionTelemetry();
 			SeedData(app);
+			app.UseErrorHandler();
 			app.UseMvc();
 			appLifeTime.ApplicationStopped.Register(() => Container.Dispose());
 
