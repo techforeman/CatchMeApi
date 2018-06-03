@@ -18,12 +18,18 @@ using CatchMe.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
 using NLog.Extensions.Logging;
 using NLog.Web;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 
 namespace CatchMe.Api
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+
+		public IConfigurationRoot Configuration { get; }
+		public IContainer Container { get; private set; }
+
+		public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -40,10 +46,10 @@ namespace CatchMe.Api
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
+        
 
         // This method gets called by the runtime. Use this method to add services to the container
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
@@ -51,18 +57,29 @@ namespace CatchMe.Api
 			services.AddMvc()
 				.AddJsonOptions(x => x.SerializerSettings.Formatting = Formatting.Indented);
 			services.AddMemoryCache();
-			services.AddScoped<IEventRepository, EventRepository>();
+			//services.AddScoped<IEventRepository, EventRepository>();
 			services.AddScoped<IUserRepository, UserRepository>();
 			services.AddScoped<IEventService, EventService>();
 			services.AddScoped<ISeatService, SeatService>();
 			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IDataInitializer, DataInitializer>();
+
 			services.AddSingleton(AutoMapperConfig.Initialize());
 			services.AddSingleton<IJwtHandler, JwtHandler>();
 			services.Configure<JwtSettings>(Configuration.GetSection("jwt"));
+			services.Configure<AppSettings>(Configuration.GetSection("app"));
+
+			var builder = new ContainerBuilder();
+			builder.Populate(services);
+			builder.RegisterType<EventRepository>().As<IEventRepository>().InstancePerLifetimeScope();
+			
+			Container = builder.Build();
+			return new AutofacServiceProvider(Container);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+			IApplicationLifetime appLifeTime)
 		{
 			//loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 			//loggerFactory.AddDebug();
@@ -86,9 +103,22 @@ namespace CatchMe.Api
 				});
 			app.UseApplicationInsightsRequestTelemetry();
 			app.UseApplicationInsightsExceptionTelemetry();
+			SeedData(app);
 			app.UseMvc();
+			appLifeTime.ApplicationStopped.Register(() => Container.Dispose());
 
 
-        }
+
+		}
+
+		private void SeedData(IApplicationBuilder app)
+		{
+			var settings = app.ApplicationServices.GetService<IOptions<AppSettings>>();
+			if(settings.Value.SeedData)
+			{
+				var dataInitialzer = app.ApplicationServices.GetService<IDataInitializer>();
+				dataInitialzer.SeedAsync();
+			}
+		}
     }
 }
