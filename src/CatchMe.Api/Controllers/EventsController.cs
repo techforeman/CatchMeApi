@@ -7,6 +7,8 @@ using CatchMe.Infrastructure.Services;
 using CatchMe.Infrastructure.Commands;
 using Microsoft.AspNetCore.Authorization;
 using CatchMe.Infrastructure.Commands.Events;
+using Microsoft.Extensions.Caching.Memory;
+using CatchMe.Infrastructure.DTO;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,17 +18,31 @@ namespace CatchMe.Api.Controllers
 	public class EventsController : Controller
 	{
 		private readonly IEventService _eventService;
+		private readonly IMemoryCache _cache;
 
-		public EventsController(IEventService eventService)
+		public EventsController(IEventService eventService, IMemoryCache cache)
 		{
 			_eventService = eventService;
+			_cache = cache;
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> Get(string name)
 		{
+			var events = _cache.Get<IEnumerable<EventDTO>>("events");
+			if (events ==null)
+			{
+				Console.WriteLine("Fetching from service.");
+				events = await _eventService.BrowseAsync(name);
+				_cache.Set("events", events, TimeSpan.FromMinutes(1));
+				
+			}
+			else
+			{
+				Console.WriteLine("Fetching from cache.");
 
-			var events = await _eventService.BrowseAsync(name);
+			}
+			
 			return Json(events);
 		}
 

@@ -50,6 +50,7 @@ namespace CatchMe.Api
 			services.AddAuthorization(x=>x.AddPolicy("HasAdminRole", p => p.RequireRole("admin")));
 			services.AddMvc()
 				.AddJsonOptions(x => x.SerializerSettings.Formatting = Formatting.Indented);
+			services.AddMemoryCache();
 			services.AddScoped<IEventRepository, EventRepository>();
 			services.AddScoped<IUserRepository, UserRepository>();
 			services.AddScoped<IEventService, EventService>();
