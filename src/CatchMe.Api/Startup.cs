@@ -22,6 +22,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CatchMe.Api.Framework;
 
+
 namespace CatchMe.Api
 {
     public class Startup
@@ -52,8 +53,19 @@ namespace CatchMe.Api
         // This method gets called by the runtime. Use this method to add services to the container
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddApplicationInsightsTelemetry(Configuration);
+
+			//services.AddCors(options =>
+			//{
+			//	options.AddPolicy("CorsPolicy", x => x.AllowAnyOrigin());
+			//	options.AddPolicy("CorsPolicy", xx => xx.AllowAnyMethod());
+			//	options.AddPolicy("CorsPolicy", xxx => xxx.AllowAnyHeader());
+			//	options.AddPolicy("CorsPolicy", xccx => xccx.AllowCredentials());
+
+			//});
+
+			// Add framework services.
+			services.AddCors();
+			services.AddApplicationInsightsTelemetry(Configuration);
 			services.AddAuthorization(x=>x.AddPolicy("HasAdminRole", p => p.RequireRole("admin")));
 			services.AddMvc()
 				.AddJsonOptions(x => x.SerializerSettings.Formatting = Formatting.Indented);
@@ -84,14 +96,18 @@ namespace CatchMe.Api
 		{
 			//loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 			//loggerFactory.AddDebug();
-			loggerFactory.AddNLog();
-			app.AddNLogWeb();
-			env.ConfigureNLog("nlog.config");
+			//loggerFactory.AddNLog();
+			//app.AddNLogWeb();
+			//env.ConfigureNLog("nlog.config");
 
 
 			
 			var jwtSettings = app.ApplicationServices.GetService<IOptions<JwtSettings>>();
-			
+			app.UseCors(options => options.AllowAnyHeader()
+				.AllowAnyMethod()
+				.AllowAnyOrigin()
+				.AllowCredentials()
+			);
 			app.UseJwtBearerAuthentication(new JwtBearerOptions
 				{ 
 					AutomaticAuthenticate =true,

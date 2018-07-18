@@ -30,13 +30,13 @@ namespace CatchMe.Infrastructure.Services
 			for (var i=1; i<=10; i++)
 			{
 				var eventId = Guid.NewGuid();
-				var name = $"Event {i}";
-				var description = $"Description for event number {i}.";
+				var name = $"Meeting number {i}";
+				var description = $"This meeting was created only for dev tests.";
 				var startDate = DateTime.UtcNow.AddHours(3);
 				var endDate = startDate.AddHours(3);
 				tasks.Add(_eventService.CreateAsync(eventId, name, description, startDate, endDate));
 				tasks.Add(_eventService.AddSeatAsync(eventId, 15, 0));
-				Logger.Info($"Created event number {i}");
+				Logger.Info($"Created meeting number {i}");
 			}
 			await Task.WhenAll(tasks);
 			Logger.Info($"Data was initialized.");

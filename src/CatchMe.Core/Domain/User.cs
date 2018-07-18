@@ -55,7 +55,7 @@ namespace CatchMe.Core.Domain
 				throw new Exception($"User cannot have an empty role.");
 			}
 			role = role.ToLowerInvariant();
-			if (_roles.Contains(role))
+			if (_roles.Contains(role)==false)
 			{
 				throw new Exception($"User cannot have a role: {role}.");
 			}

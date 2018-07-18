@@ -11,10 +11,10 @@ namespace CatchMe.Infrastructure.Repository
 	{
 		private static readonly ISet<Event> _events = new HashSet<Event>()
 		{
-			new Event(Guid.NewGuid(), "Event 1", "Event descirption 1",
-				DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(10)),
-			new Event(Guid.NewGuid(), "Event 2", "Event descirption 2",
-				DateTime.UtcNow.AddHours(5), DateTime.UtcNow.AddHours(15))
+			//new Event(Guid.NewGuid(), "Event 1", "Event descirption 1",
+			//	DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(10)),
+			//new Event(Guid.NewGuid(), "Event 2", "Event descirption 2",
+			//	DateTime.UtcNow.AddHours(5), DateTime.UtcNow.AddHours(15))
 
 		};
 

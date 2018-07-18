@@ -30,31 +30,29 @@ namespace CatchMe.Api.Framework
 
 		private static Task HandleErrorAsync(HttpContext context, Exception exception)
 		{
-			//var exceptionType = exception.GetType();
-			//var statusCode = HttpStatusCode.InternalServerError;
-			//switch(exceptionType)
-			//{
-			//	case typeof(UnauthorizedAccessException):
-			//			statusCode = HttpStatusCode.Unauthorized;
-			//			break;
+			var exceptionType = exception.GetType();
+			var statusCode = HttpStatusCode.InternalServerError;
+			if (exceptionType == typeof(UnauthorizedAccessException))
+			{
+				statusCode = HttpStatusCode.Unauthorized;
+				
+			}
+			else if (exceptionType == typeof(ArgumentException))
+			{
+				statusCode = HttpStatusCode.BadRequest;
+			}
 
-			//	case typeof(ArgumentException):
-			//			statusCode = HttpStatusCode.BadRequest;
-			//			break;
+			
+		
 
+			var response = new { message = exception.Message };
+			var payload = JsonConvert.SerializeObject(response);
+			context.Response.ContentType = "application/json";
+			context.Response.StatusCode = (int)statusCode;
 
+			return context.Response.WriteAsync(payload);
 
-
-			//}
-
-			//var response = new { message = exception.Message };
-			//var payload = JsonConvert.SerializeObject(response);
-			//context.Response.ContentType = "application/json";
-			//context.Response.StatusCode = (int)statusCode;
-
-			//return context.Response.WriteAsync(payload);
-
-			return context.Response.WriteAsync("TEST middleware implementation");
+			//return context.Response.WriteAsync("TEST middleware implementation");
 		}
 
     }
