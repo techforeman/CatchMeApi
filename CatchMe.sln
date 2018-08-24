@@ -1,20 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F28B3C30-B16F-4532-B131-33CFE56025FF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EEAAF737-8143-49FE-BC99-E5168CE169BD}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CatchMe.Core", "src\CatchMe.Core\CatchMe.Core.xproj", "{97B7D938-FA62-4603-B578-4E22D4C23E64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatchMe.Core", "src\CatchMe.Core\CatchMe.Core.csproj", "{97B7D938-FA62-4603-B578-4E22D4C23E64}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CatchMe.Infrastructure", "src\CatchMe.Infrastructure\CatchMe.Infrastructure.xproj", "{9C09958A-52A3-48EF-8D44-B65D64D53C68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatchMe.Infrastructure", "src\CatchMe.Infrastructure\CatchMe.Infrastructure.csproj", "{9C09958A-52A3-48EF-8D44-B65D64D53C68}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CatchMe.Api", "src\CatchMe.Api\CatchMe.Api.xproj", "{41220993-942C-47BC-98C5-FDF3EF4C65B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatchMe.Api", "src\CatchMe.Api\CatchMe.Api.csproj", "{41220993-942C-47BC-98C5-FDF3EF4C65B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +39,8 @@ Global
 		{97B7D938-FA62-4603-B578-4E22D4C23E64} = {F28B3C30-B16F-4532-B131-33CFE56025FF}
 		{9C09958A-52A3-48EF-8D44-B65D64D53C68} = {F28B3C30-B16F-4532-B131-33CFE56025FF}
 		{41220993-942C-47BC-98C5-FDF3EF4C65B0} = {F28B3C30-B16F-4532-B131-33CFE56025FF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1AD9ABC9-4EBF-4CC0-B9FA-45D3182EEDEB}
 	EndGlobalSection
 EndGlobal
